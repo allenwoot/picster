@@ -39,6 +39,7 @@ public class DisplayPictureAdapter extends ArrayAdapter<Uri> {
 	
 	public void udpateView(ArrayList<Uri> uri_list) {
 		this.uri_strings = uri_list;
+		Log.d(PicsterApplication.TAG, "updating VIEW!");
 		this.notifyDataSetChanged();
 	}
 	
