@@ -51,10 +51,11 @@ public class HomeActivity extends Activity {
 		ArrayList<Uri> uriList = PicsterApplication.currentUser.getUriList();
 		this.displayAdapter = new DisplayPictureAdapter(this, R.layout.picture_list_item, uriList);
 		user_picture_row.setAdapter(displayAdapter);
-		user_picture_row.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		user_picture_row.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
+			public boolean onItemLongClick(AdapterView<?> adapter, View view, int position, long arg) {
 				onSetPictureClicked(position);
+				return true;
 			}
 		}); 
 	}
