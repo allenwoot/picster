@@ -51,10 +51,11 @@ public class HomeActivity extends Activity {
 		ArrayList<Uri> uriList = PicsterApplication.currentUser.getUriList();
 		this.displayAdapter = new DisplayPictureAdapter(this, R.layout.picture_list_item, uriList);
 		user_picture_row.setAdapter(displayAdapter);
-		user_picture_row.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		user_picture_row.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
+			public boolean onItemLongClick(AdapterView<?> adapter, View view, int position, long arg) {
 				onSetPictureClicked(position);
+				return true;
 			}
 		}); 
 	}
@@ -74,7 +75,7 @@ public class HomeActivity extends Activity {
         if (resultCode == RESULT_OK) {
         	Log.d(PicsterApplication.TAG, "In activity result");
     	    Uri selectedImage = data.getData();
-    	    PicsterApplication.currentUser.setPic(selectedImage, this.positionLastClicked);
+    	    PicsterApplication.currentUser.putInDateToImagesMap(selectedImage, this.positionLastClicked);
     	    this.displayAdapter.udpateView(PicsterApplication.currentUser.getUriList());
         } else {
         	Log.d(PicsterApplication.TAG, "result Code error'd");
