@@ -63,7 +63,7 @@ public class HomeActivity extends FragmentActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) { 
         if (resultCode == RESULT_OK) {
     	    PicsterApplication.currentUser.saveImage(this.positionLastClicked, displayAdapter.getBitmap(data.getData()));
-    	    this.displayAdapter.udpateView(PicsterApplication.currentUser.getColumnList(0));
+    	    displayAdapter.udpateView(PicsterApplication.currentUser.getColumnList(0));
         } else {
         	Log.d(PicsterApplication.TAG, "result Code error'd");
         }
@@ -162,7 +162,6 @@ public class HomeActivity extends FragmentActivity {
     				return true;
     			}
     		});
-
         }
         private void onSetPictureClicked(int position) {
           Log.d(PicsterApplication.TAG, "POSITION IS: " + position);
