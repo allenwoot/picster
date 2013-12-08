@@ -17,7 +17,7 @@ public class PicsterApplication extends Application {
     @SuppressLint("SimpleDateFormat") // Specific date format set for joda LocalTime
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     @SuppressLint("SimpleDateFormat")
-	public static final SimpleDateFormat IMAGE_DATE_FORMAT = new SimpleDateFormat("MM/dd");
+	public static final SimpleDateFormat IMAGE_DATE_FORMAT = new SimpleDateFormat("MMM dd");
     public static final int IMAGE_DIMENSIONS = 125;
     public static final long MAX_IMAGE_DIMENSIONS = 500000;
     

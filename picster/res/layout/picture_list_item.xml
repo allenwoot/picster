@@ -3,43 +3,44 @@
     android:layout_height="match_parent"
     android:paddingRight="2dp"
     android:orientation="vertical">
-	
-	<ImageView
-        android:id="@+id/daily_picture"
-        android:scaleType="centerCrop"
-        android:layout_width="125dp"
-        android:layout_height="125dp" />
- 	<RelativeLayout
-        android:id="@+id/debt_text_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/transparentTextBackground"
-        android:layout_alignTop="@+id/daily_picture">
-	    <TextView 
-	        android:id="@+id/image_date"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentTop="true"
-	        android:textColor="@android:color/white"
-	        android:textSize="15sp">
-	    </TextView>
-	</RelativeLayout>
 
+   	<TextView 
+	    android:id="@+id/image_date"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:background="@color/transparentTextBackground"
+	    android:textColor="@android:color/white"
+	    android:textSize="15sp"
+	    android:gravity="center" >
+	</TextView>
 	<ImageView
-        android:id="@+id/friend1_daily_picture"
-        android:scaleType="centerCrop"
-        android:layout_width="125dp"
-        android:layout_height="125dp" />
-
+		android:id="@+id/daily_picture"
+		android:scaleType="centerCrop"
+		android:layout_width="125dp"
+		android:layout_height="125dp" 
+		android:paddingTop="15dp"/>
+	<View
+	    android:layout_width="fill_parent"
+	    android:layout_height="3dp" />
 	<ImageView
-        android:id="@+id/friend2_daily_picture"
-        android:scaleType="centerCrop"
-        android:layout_width="125dp"
-        android:layout_height="125dp" />
-	
+		android:id="@+id/friend1_daily_picture"
+		android:scaleType="centerCrop"
+		android:layout_width="125dp"
+		android:layout_height="125dp" />
+	<View
+	    android:layout_width="fill_parent"
+	    android:layout_height="3dp" />
 	<ImageView
-        android:id="@+id/friend3_daily_picture"
-        android:scaleType="centerCrop"
-        android:layout_width="125dp"
-        android:layout_height="125dp" />
+		android:id="@+id/friend2_daily_picture"
+		android:scaleType="centerCrop"
+		android:layout_width="125dp"
+		android:layout_height="125dp" />
+	<View
+	    android:layout_width="fill_parent"
+	    android:layout_height="3dp" />
+	<ImageView
+		android:id="@+id/friend3_daily_picture"
+		android:scaleType="centerCrop"
+		android:layout_width="125dp"
+		android:layout_height="125dp" />
 </LinearLayout>
