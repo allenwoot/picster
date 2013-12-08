@@ -1,25 +1,26 @@
 package com.example.picster;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
+
+import org.joda.time.LocalDate;
 
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.widget.ProfilePictureView;
@@ -30,10 +31,10 @@ public class DisplayPictureAdapter extends ArrayAdapter<PictureGridColumn> {
 	
 	private Context context;
 	private ArrayList<PictureGridColumn> columns;
-	public DisplayPictureAdapter(Context context, int resource, ArrayList<PictureGridColumn> uri_list) {
-		super(context, resource, uri_list);
+	public DisplayPictureAdapter(Context context, int resource, ArrayList<PictureGridColumn> column_list) {
+		super(context, resource, column_list);
 		this.context = context;
-		this.columns = uri_list;
+		this.columns = column_list;
 	}
 	
 	private class ViewHolder {
@@ -41,6 +42,7 @@ public class DisplayPictureAdapter extends ArrayAdapter<PictureGridColumn> {
 		ImageView friend1PictureView;
 		ImageView friend2PictureView;
 		ImageView friend3PictureView;
+		TextView dateTextView;
 	}
 	
 	public void udpateView(ArrayList<PictureGridColumn> column_list) {
@@ -62,10 +64,12 @@ public class DisplayPictureAdapter extends ArrayAdapter<PictureGridColumn> {
             holder.friend1PictureView = (ImageView) convertView.findViewById(R.id.friend1_daily_picture);
             holder.friend2PictureView = (ImageView) convertView.findViewById(R.id.friend2_daily_picture);
             holder.friend3PictureView = (ImageView) convertView.findViewById(R.id.friend3_daily_picture);
+            holder.dateTextView = (TextView) convertView.findViewById(R.id.image_date);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+		holder.dateTextView.setText(PicsterApplication.IMAGE_DATE_FORMAT.format(LocalDate.parse(PicsterApplication.DATE_FORMAT.format(new Date())).minusDays(position).toDate()));
         // Fix to use real current Column values
     	Bitmap defaultImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.question_mark);
         if (currentColumn.bitmaps.size() > 0) {
@@ -100,12 +104,12 @@ public class DisplayPictureAdapter extends ArrayAdapter<PictureGridColumn> {
 	    return convertView;
 	}
 	
-	private Bitmap getBitmap(Uri uri) {
+	public Bitmap getBitmap(Uri uri) {
 
 		InputStream in = null;
 		try {
-		    final int IMAGE_MAX_SIZE = 500000; // 0.5 MB
-		    ContentResolver mContentResolver = this.getContext().getContentResolver();
+		    final long IMAGE_MAX_SIZE = PicsterApplication.MAX_IMAGE_DIMENSIONS;
+		    ContentResolver mContentResolver = getContext().getContentResolver();
 		    in = mContentResolver.openInputStream(uri);
 
 		    // Decode image size

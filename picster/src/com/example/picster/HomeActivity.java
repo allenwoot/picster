@@ -10,10 +10,8 @@ import java.util.ArrayList;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.view.ViewPager;
@@ -91,9 +89,7 @@ public class HomeActivity extends FragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) { 
         if (resultCode == RESULT_OK) {
-        	Log.d(PicsterApplication.TAG, "In activity result");
-    	    Uri selectedImage = data.getData();
-    	    PicsterApplication.currentUser.putInDateToImagesMap(selectedImage, this.positionLastClicked);
+    	    PicsterApplication.currentUser.saveImage(this.positionLastClicked, displayAdapter.getBitmap(data.getData()));
     	    this.displayAdapter.udpateView(PicsterApplication.currentUser.getColumnList(0));
         } else {
         	Log.d(PicsterApplication.TAG, "result Code error'd");
