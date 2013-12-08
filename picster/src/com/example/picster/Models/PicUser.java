@@ -38,11 +38,11 @@ public class PicUser {
 	}
 
 	public void putInDateToImagesMap(Uri uri, int offset) {
-		dateToImagesMap.put(LocalDate.parse((PicsterApplication.dateFormat.format(new Date())).toString()).minusDays(offset), uri);
+		dateToImagesMap.put(LocalDate.parse((PicsterApplication.DATE_FORMAT.format(new Date())).toString()).minusDays(offset), uri);
 	}
 	
 	public Uri getImageFromOffset(int offset) {
-		return dateToImagesMap.get(LocalDate.parse(PicsterApplication.dateFormat.format(new Date())).minusDays(offset));
+		return dateToImagesMap.get(LocalDate.parse(PicsterApplication.DATE_FORMAT.format(new Date())).minusDays(offset));
 	}
 
 	public HashSet<String> getFriends() {

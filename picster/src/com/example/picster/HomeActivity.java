@@ -1,26 +1,16 @@
 package com.example.picster;
 
 import com.devsmart.android.ui.HorizontalListView;
-import com.parse.ParseUser;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 public class HomeActivity extends Activity {
 	private static final int SELECT_PHOTO = 100;

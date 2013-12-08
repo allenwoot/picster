@@ -12,22 +12,27 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.util.Log;
 
 public class PicUserImageMap {
 	private String fbId;
 	private HashMap<LocalDate, Bitmap> dateToImagesMap;
+	private Map<String, Object> parseDateToImagesMap;
+	private ParseObject parseObject;
 	
 	public PicUserImageMap(String fbId) {
 		this.fbId = fbId;
-		this.dateToImagesMap = new HashMap<LocalDate, Bitmap>();
+		dateToImagesMap = new HashMap<LocalDate, Bitmap>();
+		parseDateToImagesMap = new HashMap<String, Object>();
 		
 		try {
 			List<ParseObject> queryResults = (new ParseQuery<ParseObject>("UserImage")).whereEqualTo("fbId", this.fbId).find();
 			if (queryResults.size() == 1) {
-				ParseObject queryResult = queryResults.get(0);
-				HashMap<String, Object> parseDateToImagesMap = (HashMap<String, Object>) queryResult.getMap("dateToImages");
+				parseObject = queryResults.get(0);
+				parseDateToImagesMap = (HashMap<String, Object>) parseObject.getMap("dateToImages");
 				for (Map.Entry<String, Object> keyValuePair : parseDateToImagesMap.entrySet()) {
+					dateToImagesMap.put(new LocalDate(keyValuePair.getKey()), (Bitmap) keyValuePair.getValue());
 				}
 			}
 		} catch (ParseException e) {
@@ -37,14 +42,16 @@ public class PicUserImageMap {
 	}
 	
 	public Bitmap getBitmapFromDate(LocalDate date) {
-		return null;
+		return dateToImagesMap.get(date);
 	}
 	
 	public Bitmap getThumbnailFromDate(LocalDate date) {
-		return null;
+		return ThumbnailUtils.extractThumbnail(dateToImagesMap.get(date), PicsterApplication.IMAGE_DIMENSIONS, PicsterApplication.IMAGE_DIMENSIONS);
 	}
 	
-	public void saveImageToParse(String fbId, Bitmap image) {
-		
+	public void saveImageToParse(LocalDate date, Bitmap image) {
+		parseDateToImagesMap.put(PicsterApplication.DATE_FORMAT.format(date.toDate()), (Object) image);
+		parseObject.put("date", parseDateToImagesMap);
+		parseObject.saveInBackground();
 	}
 }

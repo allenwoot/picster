@@ -2,18 +2,22 @@ package com.example.picster;
 
 import java.text.SimpleDateFormat;
 
-import com.example.picster.Models.PicUser;
-import com.parse.Parse;
-import com.parse.ParseFacebookUtils;
-
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.example.picster.Models.PicUser;
+import com.parse.Parse;
+import com.parse.ParseFacebookUtils;
+
 public class PicsterApplication extends Application {
 	public static PicUser currentUser;
     public static final String TAG = "PicsterApp";
-    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    @SuppressLint("SimpleDateFormat") // Specific date format set for joda LocalTime
+	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    public static final int IMAGE_DIMENSIONS = 125;
+    public static final long MAX_IMAGE_DIMENSIONS = 500000;
     
     @Override
     public void onCreate() {

@@ -2,7 +2,6 @@ package com.example.picster;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +11,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,12 +21,11 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.parse.LogInCallback;
-import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseFacebookUtils.Permissions;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseFacebookUtils.Permissions;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -104,17 +101,9 @@ public class LoginActivity extends Activity {
 									result.put("friends", friendsFriendsHash);
 									result.save();
 								}
-								
 								ParseUser.logIn(parseUser.getUsername(), PicUser.defaultPassword);
-								Log.d(PicsterApplication.TAG, "Found user friends who are on parse!");
-
 								parseUser.put("friends", friends);
-								
-								Log.d(PicsterApplication.TAG, "Saving friends to parse!");
-
-								parseUser.save();
-								// TODO: Add current user to friends' "friends" column in parse
-								
+								parseUser.save();								
 							} catch (ParseException e){
 								Log.e(PicsterApplication.TAG, "Error: " + e.toString());
 							}

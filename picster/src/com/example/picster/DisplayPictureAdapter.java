@@ -1,6 +1,5 @@
 package com.example.picster;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.util.Log;
@@ -19,12 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import com.facebook.widget.ProfilePictureView;
-import com.parse.DeleteCallback;
-import com.parse.ParseException;
 
 public class DisplayPictureAdapter extends ArrayAdapter<Uri> {
 	
@@ -66,7 +58,7 @@ public class DisplayPictureAdapter extends ArrayAdapter<Uri> {
     		holder.pictureView.setImageBitmap(chosenImageBitmap);
     	} else {
     	Bitmap chosenImageBitmap = getBitmap(currentImageUri);
-		holder.pictureView.setImageBitmap(ThumbnailUtils.extractThumbnail(chosenImageBitmap, 125, 125));
+		holder.pictureView.setImageBitmap(ThumbnailUtils.extractThumbnail(chosenImageBitmap, PicsterApplication.IMAGE_DIMENSIONS, PicsterApplication.IMAGE_DIMENSIONS));
     	}
 		
 	    return convertView;
@@ -76,8 +68,8 @@ public class DisplayPictureAdapter extends ArrayAdapter<Uri> {
 
 		InputStream in = null;
 		try {
-		    final int IMAGE_MAX_SIZE = 500000; // 0.5 MB
-		    ContentResolver mContentResolver = this.getContext().getContentResolver();
+		    final long IMAGE_MAX_SIZE = PicsterApplication.MAX_IMAGE_DIMENSIONS;
+		    ContentResolver mContentResolver = getContext().getContentResolver();
 		    in = mContentResolver.openInputStream(uri);
 
 		    // Decode image size
