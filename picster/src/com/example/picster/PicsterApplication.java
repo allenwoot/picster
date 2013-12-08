@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 public class PicsterApplication extends Application {
 	public static PicUser currentUser;
-    static final String TAG = "PicsterApp";
+    public static final String TAG = "PicsterApp";
     @Override
     public void onCreate() {
         // Initialize Parse

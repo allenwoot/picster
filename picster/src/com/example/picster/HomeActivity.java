@@ -1,25 +1,18 @@
 package com.example.picster;
 
-<<<<<<< HEAD
 import com.parse.ParseUser;
-
-=======
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
 import android.net.Uri;
->>>>>>> a7e883a206a4b1a0d10b4d931b5f02637f1c5e92
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.app.Activity;
 import android.content.Intent;
-<<<<<<< HEAD
-=======
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
->>>>>>> a7e883a206a4b1a0d10b4d931b5f02637f1c5e92
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
