@@ -59,9 +59,15 @@ public class DisplayPictureAdapter extends ArrayAdapter<Uri> {
         
         InputStream imageStream;
         try {
+        	if (currentImageUri == null) {
+        		Log.d(PicsterApplication.TAG, "current image uri is NULL");
+        		Bitmap chosenImageBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.question_mark);
+        		holder.pictureView.setImageBitmap(chosenImageBitmap);
+        	} else {
 			imageStream = context.getContentResolver().openInputStream(currentImageUri);
 			Bitmap chosenImageBitmap = BitmapFactory.decodeStream(imageStream);	
-			holder.pictureView.setImageBitmap(chosenImageBitmap);;
+			holder.pictureView.setImageBitmap(chosenImageBitmap);
+        	}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

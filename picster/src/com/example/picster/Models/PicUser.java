@@ -7,7 +7,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import android.net.Uri;
+import android.util.Log;
 
+import com.example.picster.PicsterApplication;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
@@ -39,6 +41,7 @@ public class PicUser {
 	public PicUser(String id, String name, ParseUser parseUser) {
 		this.id = id;
 		this.parseUser = parseUser;
+		this.dateToUri = new HashMap<Integer, Uri>();
 	}
 	
 	public ArrayList<Uri> getUriList() {
@@ -48,6 +51,10 @@ public class PicUser {
 		ArrayList<Uri> uriList = new ArrayList<Uri>();
 		for (int i = 0; i < MAX_LIST_SIZE; i++) {
 	        int day = CURRENT_DAY - i;
+	        if( day < 0) {
+	        	break;
+	        }
+	        Log.d(PicsterApplication.TAG, "in getUriList: " + day);
 	        uriList.add(getUriOfDate(day));
 	        
 		}
@@ -55,10 +62,12 @@ public class PicUser {
 	}
 	
 	public Uri getUriOfDate(int date) {
+	    Log.d(PicsterApplication.TAG, "getting day: " + date);
 		return dateToUri.get(date);
 	}
 	
 	public void addPic(Uri uri) {
+	    Log.d(PicsterApplication.TAG, "adding day: " + uri.toString());
 		dateToUri.put(CURRENT_DAY, uri);
 	}
 	
