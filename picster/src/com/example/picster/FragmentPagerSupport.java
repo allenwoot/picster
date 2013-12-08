@@ -107,7 +107,7 @@ public class FragmentPagerSupport extends FragmentActivity {
             super.onActivityCreated(savedInstanceState);
             View tv = getView().findViewById(R.id.user_picture_row);
             ArrayList<PictureGridColumn> columnList = PicsterApplication.currentUser.getColumnList(mNum);
-    		this.displayAdapter = new DisplayPictureAdapter(getActivity(), R.layout.picture_list_item, columnList);
+    		this.displayAdapter = new DisplayPictureAdapter(getActivity(), R.layout.picture_list_item, columnList, mNum);
         }
 
         //@Override

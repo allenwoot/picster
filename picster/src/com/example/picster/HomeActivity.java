@@ -153,7 +153,7 @@ public class HomeActivity extends FragmentActivity {
             super.onActivityCreated(savedInstanceState);
             HorizontalListView tv = (HorizontalListView) getView().findViewById(R.id.user_picture_row);
             ArrayList<PictureGridColumn> columnList = PicsterApplication.currentUser.getColumnList(mNum);
-    		displayAdapter = new DisplayPictureAdapter(getActivity(), R.layout.picture_list_item, columnList);
+    		displayAdapter = new DisplayPictureAdapter(getActivity(), R.layout.picture_list_item, columnList, mNum);
     		tv.setAdapter(displayAdapter);
     		tv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
     			@Override
