@@ -110,7 +110,11 @@ public class LoginActivity extends Activity {
 							
 							Log.d(PicsterApplication.TAG, "User friends synced with Parse!");
 
-							PicsterApplication.currentUser.setFriends((HashMap<String, Object>)friends);
+							if (PicsterApplication.currentUser == null) {
+								PicsterApplication.currentUser = new PicUser((HashMap<String, Object>) friends);
+							} else {
+								PicsterApplication.currentUser.setFriends((HashMap<String, Object>)friends);
+							}
 							LoginActivity.this.progressDialog.dismiss();
                             startHomeActivity();
 						}
@@ -145,7 +149,13 @@ public class LoginActivity extends Activity {
 	        						e.printStackTrace();
 	        					}
 	                            
-	                            PicsterApplication.currentUser = new PicUser(LoginActivity.id, LoginActivity.name, parseUser);
+	                            if (PicsterApplication.currentUser == null) {
+	                            	PicsterApplication.currentUser = new PicUser(LoginActivity.id, LoginActivity.name, parseUser);
+	                            } else {
+	                            	PicsterApplication.currentUser.setId(LoginActivity.id);
+	                            	PicsterApplication.currentUser.setName(LoginActivity.name);
+	                            	PicsterApplication.currentUser.setParseUser(parseUser);
+	                            }
 	                            
 	                            Log.d(PicsterApplication.TAG, "User signed up and logged in through Facebook!");
 	                        } else {
@@ -182,6 +192,7 @@ public class LoginActivity extends Activity {
 
 							PicsterApplication.currentUser = new PicUser(parseUser.getUsername(), (String) parseUser.get("name"), parseUser);
 							PicsterApplication.currentUser.setFriends((HashMap<String, Object>)friends);
+							
 							LoginActivity.this.progressDialog.dismiss();
                             startHomeActivity();
 						};

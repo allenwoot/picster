@@ -27,6 +27,25 @@ public class PicUser {
 	private PicUserImageMap picUserImageMap;
 	public static String defaultPassword = "password";
 
+	public PicUser(HashMap<String, Object> friends) {
+		this.friends = new ArrayList<String>();
+		for (String key : friends.keySet()) {
+			this.friends.add(key);
+		}
+	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public void setParseUser(ParseUser parseUser) {
+		this.parseUser = parseUser;
+	}
+	
 	public PicUser(String id) {
 		this.id = id;
 		picUserImageMap = new PicUserImageMap(id);
@@ -61,7 +80,12 @@ public class PicUser {
 		ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
 		
 		for (int i = 0; i < MAX_LIST_SIZE; i++) {
-			bitmaps.add(picUserImageMap.getThumbnailFromDate(LocalDate.parse((PicsterApplication.DATE_FORMAT.format(new Date()))).minusDays(i))); 
+			String currentDate = PicsterApplication.DATE_FORMAT.format(new Date());
+			LocalDate currentLocalDate = LocalDate.parse(currentDate);
+			LocalDate dayBefore = currentLocalDate.minusDays(i);
+			bitmaps.add(picUserImageMap.getThumbnailFromDate(dayBefore)); 
+
+//			bitmaps.add(picUserImageMap.getThumbnailFromDate(LocalDate.parse((PicsterApplication.DATE_FORMAT.format(new Date()))).minusDays(i))); 
 		}
 		return bitmaps;
 	}

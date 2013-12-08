@@ -162,7 +162,6 @@ public class HomeActivity extends FragmentActivity {
     				return true;
     			}
     		});
-
         }
         private void onSetPictureClicked(int position) {
           Log.d(PicsterApplication.TAG, "POSITION IS: " + position);
