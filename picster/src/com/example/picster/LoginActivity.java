@@ -1,6 +1,8 @@
 package com.example.picster;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,8 @@ import com.parse.LogInCallback;
 import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseFacebookUtils.Permissions;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -75,13 +79,41 @@ public class LoginActivity extends Activity {
                 if (parseUser == null) {
                         Log.d(PicsterApplication.TAG, "Uh oh. The user cancelled the Facebook login.");
                 } else if (parseUser.isNew()) {
+                	Request.executeMyFriendsRequestAsync(Session.getActiveSession(), new Request.GraphUserListCallback() {
+						
+						@Override
+						public void onCompleted(List<GraphUser> facebookFriends, Response response) {
+                        	// Set friends to intersection of current user's facebook friends and parse users
+							try {
+								ParseQuery<ParseObject> friendsQuery = ParseQuery.getQuery("User");
+								Collection<Object>friendIds = new ArrayList<Object>();
+								for (GraphUser friend : facebookFriends){
+									friendIds.add(friend.getId());
+								}
+								friendsQuery.whereContainedIn("username", friendIds);
+								friendsQuery.include("username");
+								List<ParseObject> queryResults = friendsQuery.find();
+								for (ParseObject result : queryResults) {
+									LoginActivity.friends.put(result.getString("username"), null);
+								}
+								parseUser.put("friends", friends);
+								parseUser.save();
+								// TODO: Add current user to friends' "friends" column in parse
+								
+							} catch (ParseException e){
+								Log.e(PicsterApplication.TAG, "Error: " + e.toString());
+							}
+							
+							PicsterApplication.currentUser.setFriends((HashMap<String, Object>)friends);
+							LoginActivity.this.progressDialog.dismiss();
+							Log.d(PicsterApplication.TAG, "User friends synced with Parse!");
+                            startHomeActivity();
+						}
+					});
                     Request.executeMeRequestAsync(Session.getActiveSession(), new Request.GraphUserCallback() {
                         @Override
 	                    public void onCompleted(GraphUser graphUser, Response response) {
-	                        if (graphUser != null) {
-	                        	// Set friends to intersection of current user's facebook friends and parse users
-	                        	// TODO: Set friends
-	                        	
+	                        if (graphUser != null) {	                        	
 	                            // Get the parse user info
 	                        	LoginActivity.id = graphUser.getId();
 	                        	LoginActivity.name = graphUser.getName();
@@ -101,17 +133,15 @@ public class LoginActivity extends Activity {
 	                                parseUser.setEmail(email);
 	                                parseUser.put("name", name); 
 	                                parseUser.setUsername(id);
-	                                parseUser.put("friends", friends);
 	        						parseUser.save();
 	                            } catch (ParseException e) {
 	        						Log.e(PicsterApplication.TAG, "Parse Error: " + e.toString());
 	        						e.printStackTrace();
 	        					}
 	                            
-	                            PicsterApplication.currentUser = new PicUser(LoginActivity.id, LoginActivity.name, (HashMap<String, Object>) LoginActivity.friends, parseUser);
-	                            LoginActivity.this.progressDialog.dismiss();
+	                            PicsterApplication.currentUser = new PicUser(LoginActivity.id, LoginActivity.name, parseUser);
+	                            
 	                            Log.d(PicsterApplication.TAG, "User signed up and logged in through Facebook!");
-	                            startHomeActivity();
 	                        } else {
                                 Log.e(PicsterApplication.TAG, "ERROR: Unable to fetch graph user object for current user");
                                 throw new org.apache.http.ParseException();
@@ -119,7 +149,7 @@ public class LoginActivity extends Activity {
                         }
                     });
                 } else {
-                	PicsterApplication.currentUser = new PicUser(parseUser.getUsername(), parseUser.getString("name"), (HashMap<String, Object>) parseUser.getMap("friends"), parseUser);
+                	PicsterApplication.currentUser = new PicUser(parseUser.getUsername(), parseUser.getString("name"), parseUser);
                     Log.d(PicsterApplication.TAG, "User logged in through Facebook!");
 
                     startHomeActivity();
