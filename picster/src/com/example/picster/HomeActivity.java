@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -38,8 +39,8 @@ public class HomeActivity extends Activity {
 	
 	private void loadUserPictures() {
 		HorizontalListView user_picture_row = (HorizontalListView) findViewById(R.id.user_picture_row);
-		ArrayList<Uri> uriList = PicsterApplication.currentUser.getUriList();
-		this.displayAdapter = new DisplayPictureAdapter(this, R.layout.picture_list_item, uriList);
+		ArrayList<Bitmap> bitmaps = PicsterApplication.currentUser.getBitmaps();
+		this.displayAdapter = new DisplayPictureAdapter(this, R.layout.picture_list_item, bitmaps);
 		user_picture_row.setAdapter(displayAdapter);
 		user_picture_row.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
@@ -63,10 +64,8 @@ public class HomeActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) { 
         if (resultCode == RESULT_OK) {
-        	Log.d(PicsterApplication.TAG, "In activity result");
-    	    Uri selectedImage = data.getData();
-    	    PicsterApplication.currentUser.putInDateToImagesMap(selectedImage, this.positionLastClicked);
-    	    this.displayAdapter.udpateView(PicsterApplication.currentUser.getUriList());
+    	    PicsterApplication.currentUser.saveImage(this.positionLastClicked, displayAdapter.getBitmap(data.getData()));
+    	    this.displayAdapter.udpateView(PicsterApplication.currentUser.getBitmaps());
         } else {
         	Log.d(PicsterApplication.TAG, "result Code error'd");
         }

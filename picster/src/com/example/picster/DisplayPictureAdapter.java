@@ -3,6 +3,9 @@ package com.example.picster;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
+
+import org.joda.time.LocalDate;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -13,28 +16,30 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-public class DisplayPictureAdapter extends ArrayAdapter<Uri> {
+public class DisplayPictureAdapter extends ArrayAdapter<Bitmap> {
 	
 	private Context context;
-	private ArrayList<Uri> uri_strings;
-	public DisplayPictureAdapter(Context context, int resource, ArrayList<Uri> uri_list) {
-		super(context, resource, uri_list);
+	private ArrayList<Bitmap> bitmaps;
+	public DisplayPictureAdapter(Context context, int resource, ArrayList<Bitmap> bitmaps) {
+		super(context, resource, bitmaps);
 		this.context = context;
-		this.uri_strings = uri_list;
+		this.bitmaps = bitmaps;
 	}
 	
 	private class ViewHolder {
 		ImageView pictureView;
 	}
 	
-	public void udpateView(ArrayList<Uri> uri_list) {
-		uri_strings.clear();
-	    uri_strings.addAll(uri_list);
+	public void udpateView(ArrayList<Bitmap> bitmaps) {
+		this.bitmaps.clear();
+	    this.bitmaps.addAll(bitmaps);
 		Log.d(PicsterApplication.TAG, "updating VIEW!");
 		this.notifyDataSetChanged();
 	}
@@ -42,7 +47,7 @@ public class DisplayPictureAdapter extends ArrayAdapter<Uri> {
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
 		ViewHolder holder = null;
-		final Uri currentImageUri = getItem(position); 
+		final Bitmap bitmap = getItem(position); 
 	    LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.picture_list_item, null);
@@ -52,19 +57,19 @@ public class DisplayPictureAdapter extends ArrayAdapter<Uri> {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-    	if (currentImageUri == null) {
-    		Log.d(PicsterApplication.TAG, "current image uri is NULL");
-    		Bitmap chosenImageBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.question_mark);
-    		holder.pictureView.setImageBitmap(chosenImageBitmap);
+        // Setting date text
+		TextView dateTextView = (TextView) convertView.findViewById(R.id.image_date);
+		dateTextView.setText(PicsterApplication.IMAGE_DATE_FORMAT.format(LocalDate.parse(PicsterApplication.DATE_FORMAT.format(new Date())).minusDays(position).toDate()));
+    	if (bitmap == null) {
+    		holder.pictureView.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.question_mark));
     	} else {
-    	Bitmap chosenImageBitmap = getBitmap(currentImageUri);
-		holder.pictureView.setImageBitmap(ThumbnailUtils.extractThumbnail(chosenImageBitmap, PicsterApplication.IMAGE_DIMENSIONS, PicsterApplication.IMAGE_DIMENSIONS));
+			holder.pictureView.setImageBitmap(bitmap);
     	}
 		
 	    return convertView;
 	}
 	
-	private Bitmap getBitmap(Uri uri) {
+	public Bitmap getBitmap(Uri uri) {
 
 		InputStream in = null;
 		try {

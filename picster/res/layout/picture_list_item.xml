@@ -1,12 +1,27 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:paddingRight="2dp"
+    android:orientation="vertical">
 	
 	<ImageView
         android:id="@+id/daily_picture"
         android:scaleType="centerCrop"
         android:layout_width="125dp"
         android:layout_height="125dp" />
-	
-</LinearLayout>
+    <RelativeLayout
+        android:id="@+id/debt_text_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/transparentTextBackground"
+        android:layout_alignTop="@+id/daily_picture">
+	    <TextView 
+	        android:id="@+id/image_date"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentTop="true"
+	        android:textColor="@android:color/white"
+	        android:textSize="15sp">
+	    </TextView>
+	</RelativeLayout>
+</RelativeLayout>
