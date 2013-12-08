@@ -75,7 +75,7 @@ public class HomeActivity extends Activity {
         if (resultCode == RESULT_OK) {
         	Log.d(PicsterApplication.TAG, "In activity result");
     	    Uri selectedImage = data.getData();
-    	    PicsterApplication.currentUser.setPic(selectedImage, this.positionLastClicked);
+    	    PicsterApplication.currentUser.putInDateToImagesMap(selectedImage, this.positionLastClicked);
     	    this.displayAdapter.udpateView(PicsterApplication.currentUser.getUriList());
         } else {
         	Log.d(PicsterApplication.TAG, "result Code error'd");
