@@ -86,6 +86,7 @@ public class LoginActivity extends Activity {
 						public void onCompleted(List<GraphUser> facebookFriends, Response response) {
                         	// Set friends to intersection of current user's facebook friends and parse users
 							try {
+								// Hackathon, doesn't matter
 								@SuppressWarnings({ "rawtypes", "deprecation" })
 								ParseQuery friendsQuery = ParseQuery.getUserQuery();
 								List<String>friendIds = new ArrayList<String>();
@@ -97,10 +98,14 @@ public class LoginActivity extends Activity {
 								for (ParseObject result : queryResults) {
 									LoginActivity.friends.put(result.getString("username"), "");
 									HashMap<String, Object> friendsFriendsHash = (HashMap<String, Object>) result.getMap("friends");
+									// Log in as friend, modify, log out, log back in as current user
+									ParseUser.logIn(result.getString("username"), PicUser.defaultPassword);
 									friendsFriendsHash.put(parseUser.getUsername(), "");
+									result.put("friends", friendsFriendsHash);
 									result.save();
 								}
 								
+								ParseUser.logIn(parseUser.getUsername(), PicUser.defaultPassword);
 								Log.d(PicsterApplication.TAG, "Found user friends who are on parse!");
 
 								parseUser.put("friends", friends);
@@ -141,6 +146,7 @@ public class LoginActivity extends Activity {
 	                                });
 	                            }                    
 	                            try {
+	                            	parseUser.setPassword(PicUser.defaultPassword);
 	                                parseUser.setEmail(email);
 	                                parseUser.put("name", name); 
 	                                parseUser.setUsername(id);

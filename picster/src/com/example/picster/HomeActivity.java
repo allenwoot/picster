@@ -1,6 +1,8 @@
 package com.example.picster;
 
+import com.devsmart.android.ui.HorizontalListView;
 import com.parse.ParseUser;
+
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -13,12 +15,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.devsmart.android.ui.HorizontalListView;
 
 public class HomeActivity extends Activity {
 	private static final int SELECT_PHOTO = 100;
@@ -48,6 +49,7 @@ public class HomeActivity extends Activity {
 		HorizontalListView user_picture_row = (HorizontalListView) findViewById(R.id.user_picture_row);
 		ArrayList<Uri> uriList = PicsterApplication.currentUser.getUriList();
 		this.displayAdapter = new DisplayPictureAdapter(this, R.layout.picture_list_item, uriList);
+		user_picture_row.setAdapter(displayAdapter);
 	}
 	
     private void setAddPictureButton() {
@@ -62,10 +64,14 @@ public class HomeActivity extends Activity {
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) { 
-    	super.onActivityResult(requestCode, resultCode, data);
-    	Uri selectedImage = data.getData();
-    	PicsterApplication.currentUser.addPic(selectedImage);
-    	this.displayAdapter.udpateView(PicsterApplication.currentUser.getUriList());
+        if (resultCode == RESULT_OK) {
+        	Log.d(PicsterApplication.TAG, "In activity result");
+    	    Uri selectedImage = data.getData();
+    	    PicsterApplication.currentUser.addPic(selectedImage);
+    	    this.displayAdapter.udpateView(PicsterApplication.currentUser.getUriList());
+        } else {
+        	Log.d(PicsterApplication.TAG, "result Code error'd");
+        }
         //InputStream imageStream;
         //// Upload to parse
         //// add to hashmap and update display adapter.
@@ -91,8 +97,8 @@ public class HomeActivity extends Activity {
 
 	private void startLoginActivity() {
 		Intent intent = new Intent(this, LoginActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		//intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
 	}
 }
