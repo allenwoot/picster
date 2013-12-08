@@ -1,10 +1,12 @@
 package com.example.picster;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -59,22 +61,85 @@ public class DisplayPictureAdapter extends ArrayAdapter<Uri> {
         }
         
         InputStream imageStream;
-        try {
+//        try {
         	if (currentImageUri == null) {
         		Log.d(PicsterApplication.TAG, "current image uri is NULL");
         		Bitmap chosenImageBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.question_mark);
         		holder.pictureView.setImageBitmap(chosenImageBitmap);
         	} else {
-			imageStream = context.getContentResolver().openInputStream(currentImageUri);
-			Bitmap chosenImageBitmap = BitmapFactory.decodeStream(imageStream);	
+//			imageStream = context.getContentResolver().openInputStream(currentImageUri);
+//			Bitmap chosenImageBitmap = BitmapFactory.decodeStream(imageStream);	
+        	Bitmap chosenImageBitmap = getBitmap(currentImageUri);
 			holder.pictureView.setImageBitmap(chosenImageBitmap);
         	}
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 	    return convertView;
+	}
+	
+	private Bitmap getBitmap(Uri uri) {
+
+		InputStream in = null;
+		try {
+		    final int IMAGE_MAX_SIZE = 15625; // Just small enough for 125x125. Can make bigger later.
+		    ContentResolver mContentResolver = this.getContext().getContentResolver();
+		    in = mContentResolver.openInputStream(uri);
+
+		    // Decode image size
+		    BitmapFactory.Options o = new BitmapFactory.Options();
+		    o.inJustDecodeBounds = true;
+		    BitmapFactory.decodeStream(in, null, o);
+		    in.close();
+
+
+
+		    int scale = 1;
+		    while ((o.outWidth * o.outHeight) * (1 / Math.pow(scale, 2)) > 
+		          IMAGE_MAX_SIZE) {
+		       scale++;
+		    }
+		    Log.d(PicsterApplication.TAG, "scale = " + scale + ", orig-width: " + o.outWidth + ", orig-height: " + o.outHeight);
+
+		    Bitmap b = null;
+		    in = mContentResolver.openInputStream(uri);
+		    if (scale > 1) {
+		        scale--;
+		        // scale to max possible inSampleSize that still yields an image
+		        // larger than target
+		        o = new BitmapFactory.Options();
+		        o.inSampleSize = scale;
+		        b = BitmapFactory.decodeStream(in, null, o);
+
+		        // resize to desired dimensions
+		        int height = b.getHeight();
+		        int width = b.getWidth();
+		        Log.d(PicsterApplication.TAG, "1th scale operation dimenions - width: " + width + ", height: " + height);
+
+		        double y = Math.sqrt(IMAGE_MAX_SIZE
+		                / (((double) width) / height));
+		        double x = (y / height) * width;
+
+		        Bitmap scaledBitmap = Bitmap.createScaledBitmap(b, (int) x, 
+		           (int) y, true);
+		        b.recycle();
+		        b = scaledBitmap;
+
+		        System.gc();
+		    } else {
+		        b = BitmapFactory.decodeStream(in);
+		    }
+		    in.close();
+
+		    Log.d(PicsterApplication.TAG, "bitmap size - width: " +b.getWidth() + ", height: " + 
+		       b.getHeight());
+		    return b;
+		} catch (IOException e) {
+		    Log.e(PicsterApplication.TAG, e.getMessage(),e);
+		    return null;
+		}
 	}
 }
 	  
