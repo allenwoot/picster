@@ -18,12 +18,13 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class HomeActivity extends Activity {
 	private static final int SELECT_PHOTO = 100;
-	
+	private static final String POSITION_IN_LIST = "position_in_list";
 	private DisplayPictureAdapter displayAdapter;
 	
 	@Override
@@ -33,7 +34,6 @@ public class HomeActivity extends Activity {
 		}
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
-		setAddPictureButton();
 		loadUserPictures();
 	}
 	
@@ -50,24 +50,34 @@ public class HomeActivity extends Activity {
 		ArrayList<Uri> uriList = PicsterApplication.currentUser.getUriList();
 		this.displayAdapter = new DisplayPictureAdapter(this, R.layout.picture_list_item, uriList);
 		user_picture_row.setAdapter(displayAdapter);
-	}
-	
-    private void setAddPictureButton() {
-    	TextView addPictureButton = (TextView) findViewById(R.id.add_picture_button);
-		addPictureButton.setOnClickListener(new View.OnClickListener() {
+		user_picture_row.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
-			public void onClick(View v) {
-				onAddPictureClicked();
+			public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
+				onSetPictureClicked(position);
 			}
-		});
-    }
+		}); 
+	}
+	//TODO remove this
+    //private void setAddPictureButton() {
+    //	TextView addPictureButton = (TextView) findViewById(R.id.add_picture_button);
+	//	addPictureButton.setOnClickListener(new View.OnClickListener() {
+	//		@Override
+	//		public void onClick(View v) {
+	//			onAddPictureClicked();
+	//		}
+	//	});
+    //}
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) { 
         if (resultCode == RESULT_OK) {
         	Log.d(PicsterApplication.TAG, "In activity result");
     	    Uri selectedImage = data.getData();
-    	    PicsterApplication.currentUser.addPic(selectedImage);
+    	    int position = data.getIntExtra(POSITION_IN_LIST, -1);
+    	    if (position == -1) {
+    	    	Log.wtf(PicsterApplication.TAG, "SOMETHING WENT REALLY WRONG POSITION IS -1 meaning wasn't fetched");
+    	    }
+    	    PicsterApplication.currentUser.setPic(selectedImage, position);
     	    this.displayAdapter.udpateView(PicsterApplication.currentUser.getUriList());
         } else {
         	Log.d(PicsterApplication.TAG, "result Code error'd");
@@ -87,11 +97,12 @@ public class HomeActivity extends Activity {
 		//}
     }
     
-    
-    private void onAddPictureClicked() {
+    private void onSetPictureClicked(int position) {
+      Log.d(PicsterApplication.TAG, "POSITION IS: " + position);
       Intent intent = new Intent();
       intent.setType("image/*");
       intent.setAction(Intent.ACTION_GET_CONTENT);
+      intent.putExtra(POSITION_IN_LIST, position);
       startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PHOTO);	
     }
 

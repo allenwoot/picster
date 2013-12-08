@@ -38,7 +38,8 @@ public class DisplayPictureAdapter extends ArrayAdapter<Uri> {
 	}
 	
 	public void udpateView(ArrayList<Uri> uri_list) {
-		this.uri_strings = uri_list;
+		uri_strings.clear();
+	    uri_strings.addAll(uri_list);
 		Log.d(PicsterApplication.TAG, "updating VIEW!");
 		this.notifyDataSetChanged();
 	}
@@ -47,7 +48,6 @@ public class DisplayPictureAdapter extends ArrayAdapter<Uri> {
 	public View getView(final int position, View convertView, final ViewGroup parent) {
 		ViewHolder holder = null;
 		final Uri currentImageUri = getItem(position); 
-		//TODO(brianlin): handle case of null currentImageUri
 	    LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.picture_list_item, null);
