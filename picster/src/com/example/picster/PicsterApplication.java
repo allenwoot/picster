@@ -1,5 +1,7 @@
 package com.example.picster;
 
+import java.text.SimpleDateFormat;
+
 import com.example.picster.Models.PicUser;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
@@ -11,6 +13,8 @@ import android.widget.Toast;
 public class PicsterApplication extends Application {
 	public static PicUser currentUser;
     public static final String TAG = "PicsterApp";
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    
     @Override
     public void onCreate() {
         // Initialize Parse

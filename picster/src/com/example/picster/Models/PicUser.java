@@ -22,8 +22,7 @@ public class PicUser {
 	public final static int CURRENT_DAY = 5;
 	private String id;
 	private String name;
-	private HashMap<String, PicUser> friends;
-	private HashMap<Integer, Uri> dateToUri;
+	private HashSet<String> friends;
 	private HashMap<LocalDate, Uri> dateToImagesMap;
 	private ParseUser parseUser;
 	public static String defaultPassword = "password";
@@ -39,24 +38,22 @@ public class PicUser {
 	}
 
 	public void putInDateToImagesMap(Uri uri, int offset) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		dateToImagesMap.put(LocalDate.parse((sdf.format(new Date())).toString()).minusDays(offset), uri);
+		dateToImagesMap.put(LocalDate.parse((PicsterApplication.dateFormat.format(new Date())).toString()).minusDays(offset), uri);
 	}
 	
 	public Uri getImageFromOffset(int offset) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		return dateToImagesMap.get(LocalDate.parse(sdf.format(new Date())).minusDays(offset));
+		return dateToImagesMap.get(LocalDate.parse(PicsterApplication.dateFormat.format(new Date())).minusDays(offset));
 	}
 
-	
-	public HashMap<String, PicUser> getFriends() {
+	public HashSet<String> getFriends() {
 		return friends;
 	}
 
+
 	public void setFriends(HashMap<String, Object> friends) {
-		this.friends = new HashMap<String, PicUser>();
+		this.friends = new HashSet<String>();
 		for (String key : friends.keySet()) {
-			this.friends.put(key, new PicUser(key));
+			this.friends.add(key);
 		}
 	}
 	

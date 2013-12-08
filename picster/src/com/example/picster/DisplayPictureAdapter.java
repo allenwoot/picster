@@ -11,6 +11,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -59,23 +60,14 @@ public class DisplayPictureAdapter extends ArrayAdapter<Uri> {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        
-        InputStream imageStream;
-//        try {
-        	if (currentImageUri == null) {
-        		Log.d(PicsterApplication.TAG, "current image uri is NULL");
-        		Bitmap chosenImageBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.question_mark);
-        		holder.pictureView.setImageBitmap(chosenImageBitmap);
-        	} else {
-//			imageStream = context.getContentResolver().openInputStream(currentImageUri);
-//			Bitmap chosenImageBitmap = BitmapFactory.decodeStream(imageStream);	
-        	Bitmap chosenImageBitmap = getBitmap(currentImageUri);
-			holder.pictureView.setImageBitmap(chosenImageBitmap);
-        	}
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+    	if (currentImageUri == null) {
+    		Log.d(PicsterApplication.TAG, "current image uri is NULL");
+    		Bitmap chosenImageBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.question_mark);
+    		holder.pictureView.setImageBitmap(chosenImageBitmap);
+    	} else {
+    	Bitmap chosenImageBitmap = getBitmap(currentImageUri);
+		holder.pictureView.setImageBitmap(ThumbnailUtils.extractThumbnail(chosenImageBitmap, 125, 125));
+    	}
 		
 	    return convertView;
 	}
@@ -84,7 +76,7 @@ public class DisplayPictureAdapter extends ArrayAdapter<Uri> {
 
 		InputStream in = null;
 		try {
-		    final int IMAGE_MAX_SIZE = 15625; // Just small enough for 125x125. Can make bigger later.
+		    final int IMAGE_MAX_SIZE = 500000; // 0.5 MB
 		    ContentResolver mContentResolver = this.getContext().getContentResolver();
 		    in = mContentResolver.openInputStream(uri);
 
@@ -93,8 +85,6 @@ public class DisplayPictureAdapter extends ArrayAdapter<Uri> {
 		    o.inJustDecodeBounds = true;
 		    BitmapFactory.decodeStream(in, null, o);
 		    in.close();
-
-
 
 		    int scale = 1;
 		    while ((o.outWidth * o.outHeight) * (1 / Math.pow(scale, 2)) > 
