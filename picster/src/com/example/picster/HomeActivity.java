@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 
 public class HomeActivity extends Activity {
 	private static final int SELECT_PHOTO = 100;
@@ -47,6 +48,18 @@ public class HomeActivity extends Activity {
 			public boolean onItemLongClick(AdapterView<?> adapter, View view, int position, long arg) {
 				onSetPictureClicked(position);
 				return true;
+			}
+		}); 
+		user_picture_row.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
+				Bitmap bmp = PicsterApplication.currentUser.getBitMap(position);
+				if (bmp == null) {
+					return;
+				}
+				Intent intent = new Intent(HomeActivity.this, FullScreenImageActivity.class);
+				intent.putExtra("bmp", bmp);
+				startActivityForResult(intent, 99);
 			}
 		}); 
 	}
