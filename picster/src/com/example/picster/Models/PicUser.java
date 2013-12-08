@@ -6,6 +6,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.joda.time.LocalDate;
+
+import android.R.integer;
 import android.net.Uri;
 import android.util.Log;
 
@@ -20,9 +23,14 @@ public class PicUser {
 	private String name;
 	private HashMap<String, PicUser> friends;
 	private HashMap<Integer, Uri> dateToUri;
+	private HashMap<LocalDate, Uri> dateToImagesMap;
 	private ParseUser parseUser;
 	public static String defaultPassword = "password";
 
+	public void putInDateToImagesMap(Uri uri, int offset) {
+		dateToImagesMap.put(LocalDate.parse((new Date()).toString()).minusDays(offset), uri);
+	}
+	
 	public HashMap<String, PicUser> getFriends() {
 		return friends;
 	}
