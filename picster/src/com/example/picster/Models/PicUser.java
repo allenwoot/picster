@@ -8,11 +8,12 @@ import com.parse.ParseUser;
 
 public class PicUser {
 	private String id;
+	private String name;
 	private HashMap<String, PicUser> friends;
 	private ParseUser parseUser;
 	public static String defaultPassword = "password";
 	
-	public PicUser(String id, HashMap<String, Object> friends, ParseUser parseUser) {
+	public PicUser(String id, String name, HashMap<String, Object> friends, ParseUser parseUser) {
 		this.id = id;
 		this.friends = null;
 		this.parseUser = parseUser;
