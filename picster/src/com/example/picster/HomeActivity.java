@@ -32,7 +32,7 @@ import com.example.picster.VerticalViewPager;
 public class HomeActivity extends FragmentActivity {
 	private static final int SELECT_PHOTO = 100;
 	private static int NUM_ITEMS = 2;
-	private DisplayPictureAdapter displayAdapter;
+	private static DisplayPictureAdapter displayAdapter;
 	private static int positionLastClicked;
     MyAdapter mAdapter;
     VerticalViewPager mPager;
@@ -60,30 +60,6 @@ public class HomeActivity extends FragmentActivity {
 		return true;
 	}
 	
-	private void loadUserPictures() {
-		HorizontalListView user_picture_row = (HorizontalListView) findViewById(R.id.user_picture_row);
-		ArrayList<PictureGridColumn> columnList = PicsterApplication.currentUser.getColumnList(0);
-		this.displayAdapter = new DisplayPictureAdapter(this, R.layout.picture_list_item, columnList);
-		user_picture_row.setAdapter(displayAdapter);
-		//user_picture_row.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-		//	@Override
-		//	public boolean onItemLongClick(AdapterView<?> adapter, View view, int position, long arg) {
-		//		onSetPictureClicked(position);
-		//		return true;
-		//	}
-		//}); 
-	}
-	//TODO remove this
-    //private void setAddPictureButton() {
-    //	TextView addPictureButton = (TextView) findViewById(R.id.add_picture_button);
-	//	addPictureButton.setOnClickListener(new View.OnClickListener() {
-	//		@Override
-	//		public void onClick(View v) {
-	//			onAddPictureClicked();
-	//		}
-	//	});
-    //}
-    
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) { 
         if (resultCode == RESULT_OK) {
@@ -136,7 +112,6 @@ public class HomeActivity extends FragmentActivity {
 
     public static class HorizontalListFragment extends Fragment {
         int mNum;
-        DisplayPictureAdapter displayAdapter;
 
         /**
          * Create a new instance of CountingFragment, providing "num"
@@ -179,7 +154,7 @@ public class HomeActivity extends FragmentActivity {
             super.onActivityCreated(savedInstanceState);
             HorizontalListView tv = (HorizontalListView) getView().findViewById(R.id.user_picture_row);
             ArrayList<PictureGridColumn> columnList = PicsterApplication.currentUser.getColumnList(mNum);
-    		this.displayAdapter = new DisplayPictureAdapter(getActivity(), R.layout.picture_list_item, columnList);
+    		displayAdapter = new DisplayPictureAdapter(getActivity(), R.layout.picture_list_item, columnList);
     		tv.setAdapter(displayAdapter);
     		tv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
     			@Override

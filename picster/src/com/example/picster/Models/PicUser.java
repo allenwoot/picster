@@ -46,7 +46,6 @@ public class PicUser {
 		return friends;
 	}
 
-
 	public void setFriends(HashMap<String, Object> friends) {
 		this.friends = new ArrayList<String>();
 		for (String key : friends.keySet()) {
@@ -64,6 +63,7 @@ public class PicUser {
 	}
 	
 	public ArrayList<PictureGridColumn> getColumnList(int num) {
+		num *= 3;
 		ArrayList<Bitmap> currentUserList = getBitmaps();
 		ArrayList<Bitmap> friend1List = null;
 		ArrayList<Bitmap> friend2List = null;
