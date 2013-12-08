@@ -32,7 +32,6 @@ import com.example.picster.VerticalViewPager;
 public class HomeActivity extends FragmentActivity {
 	private static final int SELECT_PHOTO = 100;
 	private static int NUM_ITEMS = 2;
-	private static final String POSITION_IN_LIST = "position_in_list";
 	private DisplayPictureAdapter displayAdapter;
 	private static int positionLastClicked;
     MyAdapter mAdapter;
@@ -45,7 +44,6 @@ public class HomeActivity extends FragmentActivity {
 			startLoginActivity();
 		}
 		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_home);
 		setContentView(R.layout.fragment_pager);
 		mAdapter = new MyAdapter(getSupportFragmentManager());
 	    mPager = (VerticalViewPager) findViewById(R.id.pager);
@@ -118,16 +116,7 @@ public class HomeActivity extends FragmentActivity {
 		startActivity(intent);
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	// FRAGMENT STUFF FOR VERTICAL PAGE SCROLLING
 	
 	public static class MyAdapter extends FragmentPagerAdapter {
         public MyAdapter(FragmentManager fm) {
@@ -136,7 +125,7 @@ public class HomeActivity extends FragmentActivity {
 
         @Override
         public int getCount() {
-            return NUM_ITEMS;
+        	return (PicsterApplication.currentUser.getFriends().size() / 3) + 1;
         }
 
         @Override
@@ -170,7 +159,7 @@ public class HomeActivity extends FragmentActivity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            mNum = getArguments() != null ? getArguments().getInt("num") : 1;
+            mNum = getArguments() != null ? getArguments().getInt("num") : -1;
         }
 
         /**

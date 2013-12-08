@@ -155,10 +155,37 @@ public class LoginActivity extends Activity {
                         }
                     });
                 } else {
-                	PicsterApplication.currentUser = new PicUser(parseUser.getUsername(), parseUser.getString("name"), parseUser);
                     Log.d(PicsterApplication.TAG, "User logged in through Facebook!");
 
-                    startHomeActivity();
+                	Request.executeMyFriendsRequestAsync(Session.getActiveSession(), new Request.GraphUserListCallback() {
+						
+						@Override
+						public void onCompleted(List<GraphUser> facebookFriends, Response response) {
+                        	// Set friends to intersection of current user's facebook friends and parse users
+							try {
+								// Hackathon, doesn't matter
+								ParseQuery friendsQuery = ParseQuery.getUserQuery();
+								List<String>friendIds = new ArrayList<String>();
+								for (GraphUser friend : facebookFriends){
+									friendIds.add(friend.getId());
+								}
+								friendsQuery.whereContainedIn("username", friendIds);
+								List<ParseObject> queryResults = friendsQuery.find();
+								for (ParseObject result : queryResults) {
+									LoginActivity.friends.put(result.getString("username"), "");
+								}
+							} catch (ParseException e){
+								Log.e(PicsterApplication.TAG, "Error: " + e.toString());
+							}
+							
+							Log.d(PicsterApplication.TAG, "User friends synced with Parse!");
+
+							PicsterApplication.currentUser = new PicUser(parseUser.getUsername(), (String) parseUser.get("name"), parseUser);
+							PicsterApplication.currentUser.setFriends((HashMap<String, Object>)friends);
+							LoginActivity.this.progressDialog.dismiss();
+                            startHomeActivity();
+						};
+                	});
                 }
             }
         });

@@ -81,7 +81,7 @@ public class DisplayPictureAdapter extends ArrayAdapter<PictureGridColumn> {
         }
         if (currentColumn.bitmaps.size() > 1) {
         	if (currentColumn.bitmaps.get(1) != null) {
-        		holder.pictureView.setImageBitmap(ThumbnailUtils.extractThumbnail(currentColumn.bitmaps.get(1), 125, 125));
+        		holder.friend1PictureView.setImageBitmap(ThumbnailUtils.extractThumbnail(currentColumn.bitmaps.get(1), 125, 125));
         	} else {
         		holder.friend1PictureView.setImageBitmap(defaultImage);
         	}
