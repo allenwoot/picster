@@ -1,5 +1,7 @@
 package com.example.picster.Models;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,9 +12,11 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 public class PicUser {
+	public final static int MAX_LIST_SIZE = 100;
+	public final static int CURRENT_DAY = 5;
 	private String id;
 	private HashMap<String, PicUser> friends;
-	private HashMap<Date, Uri> dateToUri;
+	private HashMap<Integer, Uri> dateToUri;
 	private ParseUser parseUser;
 	public static String defaultPassword = "password";
 	
@@ -22,8 +26,25 @@ public class PicUser {
 		this.parseUser = parseUser;
 	}
 	
-	public Uri getUriOfDate(Date date) {
+	public ArrayList<Uri> getUriList() {
+		Calendar c = Calendar.getInstance();
+		Date date = c.getTime();
+
+		ArrayList<Uri> uriList = new ArrayList<Uri>();
+		for (int i = 0; i < MAX_LIST_SIZE; i++) {
+	        int day = CURRENT_DAY - i;
+	        uriList.add(getUriOfDate(day));
+	        
+		}
+		return uriList;
+	}
+	
+	public Uri getUriOfDate(int date) {
 		return dateToUri.get(date);
+	}
+	
+	public void addPic(Uri uri) {
+		dateToUri.put(CURRENT_DAY, uri);
 	}
 	
 }
