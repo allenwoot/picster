@@ -23,23 +23,31 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class DisplayPictureAdapter extends ArrayAdapter<Bitmap> {
+import com.facebook.widget.ProfilePictureView;
+import com.parse.DeleteCallback;
+import com.parse.ParseException;
+
+public class DisplayPictureAdapter extends ArrayAdapter<PictureGridColumn> {
 	
 	private Context context;
-	private ArrayList<Bitmap> bitmaps;
-	public DisplayPictureAdapter(Context context, int resource, ArrayList<Bitmap> bitmaps) {
-		super(context, resource, bitmaps);
+	private ArrayList<PictureGridColumn> columns;
+	public DisplayPictureAdapter(Context context, int resource, ArrayList<PictureGridColumn> column_list) {
+		super(context, resource, column_list);
 		this.context = context;
-		this.bitmaps = bitmaps;
+		this.columns = column_list;
 	}
 	
 	private class ViewHolder {
 		ImageView pictureView;
+		ImageView friend1PictureView;
+		ImageView friend2PictureView;
+		ImageView friend3PictureView;
+		TextView dateTextView;
 	}
 	
-	public void udpateView(ArrayList<Bitmap> bitmaps) {
-		this.bitmaps.clear();
-	    this.bitmaps.addAll(bitmaps);
+	public void udpateView(ArrayList<PictureGridColumn> column_list) {
+		columns.clear();
+	    columns.addAll(column_list);
 		Log.d(PicsterApplication.TAG, "updating VIEW!");
 		this.notifyDataSetChanged();
 	}
@@ -47,25 +55,52 @@ public class DisplayPictureAdapter extends ArrayAdapter<Bitmap> {
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
 		ViewHolder holder = null;
-		final Bitmap bitmap = getItem(position); 
+		final PictureGridColumn currentColumn = getItem(position); 
 	    LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.picture_list_item, null);
             holder = new ViewHolder();
             holder.pictureView = (ImageView) convertView.findViewById(R.id.daily_picture);
+            holder.friend1PictureView = (ImageView) convertView.findViewById(R.id.friend1_daily_picture);
+            holder.friend2PictureView = (ImageView) convertView.findViewById(R.id.friend2_daily_picture);
+            holder.friend3PictureView = (ImageView) convertView.findViewById(R.id.friend3_daily_picture);
+            holder.dateTextView = (TextView) convertView.findViewById(R.id.image_date);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        // Setting date text
-		TextView dateTextView = (TextView) convertView.findViewById(R.id.image_date);
-		dateTextView.setText(PicsterApplication.IMAGE_DATE_FORMAT.format(LocalDate.parse(PicsterApplication.DATE_FORMAT.format(new Date())).minusDays(position).toDate()));
-    	if (bitmap == null) {
-    		holder.pictureView.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.question_mark));
-    	} else {
-			holder.pictureView.setImageBitmap(bitmap);
-    	}
-		
+		holder.dateTextView.setText(PicsterApplication.IMAGE_DATE_FORMAT.format(LocalDate.parse(PicsterApplication.DATE_FORMAT.format(new Date())).minusDays(position).toDate()));
+        // Fix to use real current Column values
+    	Bitmap defaultImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.question_mark);
+        if (currentColumn.bitmaps.size() > 0) {
+        	if (currentColumn.bitmaps.get(0) != null) {
+        		holder.pictureView.setImageBitmap(ThumbnailUtils.extractThumbnail(currentColumn.bitmaps.get(0), 125, 125));
+        	} else {
+        		holder.pictureView.setImageBitmap(defaultImage);
+        	}
+        }
+        if (currentColumn.bitmaps.size() > 1) {
+        	if (currentColumn.bitmaps.get(1) != null) {
+        		holder.friend1PictureView.setImageBitmap(ThumbnailUtils.extractThumbnail(currentColumn.bitmaps.get(1), 125, 125));
+        	} else {
+        		holder.friend1PictureView.setImageBitmap(defaultImage);
+        	}
+        }
+        if (currentColumn.bitmaps.size() > 2) {
+        	if (currentColumn.bitmaps.get(2) != null) {
+        		holder.friend2PictureView.setImageBitmap(ThumbnailUtils.extractThumbnail(currentColumn.bitmaps.get(2), 125, 125));
+        	} else {
+        		holder.friend2PictureView.setImageBitmap(defaultImage);
+        	}
+        }
+        if (currentColumn.bitmaps.size() > 3) {
+        	if (currentColumn.bitmaps.get(3) != null) {
+        		holder.friend3PictureView.setImageBitmap(ThumbnailUtils.extractThumbnail(currentColumn.bitmaps.get(3), 125, 125));
+        	} else {
+        		holder.friend3PictureView.setImageBitmap(defaultImage);
+        	}
+        }
+        //TODO make them disappear if they're not in currentColumn, set imageveiw to GONE
 	    return convertView;
 	}
 	
