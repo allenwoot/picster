@@ -1,4 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">picster</string>
     <string name="action_settings">Settings</string>
     <string name="add_picture">Add Picture</string>
@@ -8,4 +10,7 @@
     <string name="facebook_app_id">431741493620263</string>
     <string name="login_message">Please log in to use Picster</string>
     <string name="login_text">Login</string>
+    <string name="title_activity_full_screen_image">FullScreenImageActivity</string>
+    <string name="hello_world">Hello world!</string>
+
 </resources>

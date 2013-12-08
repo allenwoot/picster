@@ -53,6 +53,10 @@ public class PicUser {
 		}
 	}
 	
+	public Bitmap getBitMap(int index) {
+		return picUserImageMap.getThumbnailFromDate(LocalDate.parse((PicsterApplication.DATE_FORMAT.format(new Date()))).minusDays(index));
+	}
+	
 	public ArrayList<Bitmap> getBitmaps() {
 		ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
 		

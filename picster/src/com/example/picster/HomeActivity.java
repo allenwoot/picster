@@ -1,7 +1,6 @@
 package com.example.picster;
 
 import com.devsmart.android.ui.HorizontalListView;
-import com.directionalviewpager.DirectionalViewPager;
 import com.parse.ParseUser;
 
 import java.io.FileNotFoundException;
