@@ -10,15 +10,17 @@ import java.util.HashSet;
 import org.joda.time.LocalDate;
 
 import android.R.integer;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 
 import com.example.picster.PicsterApplication;
+import com.example.picster.PictureGridColumn;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 public class PicUser {
-	public final static int MAX_LIST_SIZE = 100;
+	public final static int MAX_LIST_SIZE = 25;
 	public final static int CURRENT_DAY = 5;
 	private String id;
 	private String name;
@@ -64,5 +66,18 @@ public class PicUser {
 	        uriList.add(getImageFromOffset(i)); 
 		}
 		return uriList;
+	}
+	
+	public ArrayList<PictureGridColumn> getColumnList(int num) {
+		ArrayList<PictureGridColumn> returnList = new ArrayList<PictureGridColumn>();
+		for (int i = 0; i < MAX_LIST_SIZE; i++) {
+			ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
+			bitmaps.add(null);
+			bitmaps.add(null);
+			bitmaps.add(null);
+			bitmaps.add(null);
+			returnList.add(new PictureGridColumn(bitmaps));
+		}
+		return returnList;
 	}
 }

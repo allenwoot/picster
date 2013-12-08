@@ -8,5 +8,23 @@
         android:scaleType="centerCrop"
         android:layout_width="125dp"
         android:layout_height="125dp" />
+
+	<ImageView
+        android:id="@+id/friend1_daily_picture"
+        android:scaleType="centerCrop"
+        android:layout_width="125dp"
+        android:layout_height="125dp" />
+
+	<ImageView
+        android:id="@+id/friend2_daily_picture"
+        android:scaleType="centerCrop"
+        android:layout_width="125dp"
+        android:layout_height="125dp" />
 	
+	<ImageView
+        android:id="@+id/friend3_daily_picture"
+        android:scaleType="centerCrop"
+        android:layout_width="125dp"
+        android:layout_height="125dp" />
+
 </LinearLayout>

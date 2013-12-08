@@ -26,23 +26,26 @@ import com.facebook.widget.ProfilePictureView;
 import com.parse.DeleteCallback;
 import com.parse.ParseException;
 
-public class DisplayPictureAdapter extends ArrayAdapter<Uri> {
+public class DisplayPictureAdapter extends ArrayAdapter<PictureGridColumn> {
 	
 	private Context context;
-	private ArrayList<Uri> uri_strings;
-	public DisplayPictureAdapter(Context context, int resource, ArrayList<Uri> uri_list) {
+	private ArrayList<PictureGridColumn> columns;
+	public DisplayPictureAdapter(Context context, int resource, ArrayList<PictureGridColumn> uri_list) {
 		super(context, resource, uri_list);
 		this.context = context;
-		this.uri_strings = uri_list;
+		this.columns = uri_list;
 	}
 	
 	private class ViewHolder {
 		ImageView pictureView;
+		ImageView friend1PictureView;
+		ImageView friend2PictureView;
+		ImageView friend3PictureView;
 	}
 	
-	public void udpateView(ArrayList<Uri> uri_list) {
-		uri_strings.clear();
-	    uri_strings.addAll(uri_list);
+	public void udpateView(ArrayList<PictureGridColumn> column_list) {
+		columns.clear();
+	    columns.addAll(column_list);
 		Log.d(PicsterApplication.TAG, "updating VIEW!");
 		this.notifyDataSetChanged();
 	}
@@ -50,25 +53,50 @@ public class DisplayPictureAdapter extends ArrayAdapter<Uri> {
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
 		ViewHolder holder = null;
-		final Uri currentImageUri = getItem(position); 
+		final PictureGridColumn currentColumn = getItem(position); 
 	    LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.picture_list_item, null);
             holder = new ViewHolder();
             holder.pictureView = (ImageView) convertView.findViewById(R.id.daily_picture);
+            holder.friend1PictureView = (ImageView) convertView.findViewById(R.id.friend1_daily_picture);
+            holder.friend2PictureView = (ImageView) convertView.findViewById(R.id.friend2_daily_picture);
+            holder.friend3PictureView = (ImageView) convertView.findViewById(R.id.friend3_daily_picture);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-    	if (currentImageUri == null) {
-    		Log.d(PicsterApplication.TAG, "current image uri is NULL");
-    		Bitmap chosenImageBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.question_mark);
-    		holder.pictureView.setImageBitmap(chosenImageBitmap);
-    	} else {
-    	Bitmap chosenImageBitmap = getBitmap(currentImageUri);
-		holder.pictureView.setImageBitmap(ThumbnailUtils.extractThumbnail(chosenImageBitmap, 125, 125));
-    	}
-		
+        // Fix to use real current Column values
+    	Bitmap defaultImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.question_mark);
+        if (currentColumn.bitmaps.size() > 0) {
+        	if (currentColumn.bitmaps.get(0) != null) {
+        		holder.pictureView.setImageBitmap(ThumbnailUtils.extractThumbnail(currentColumn.bitmaps.get(0), 125, 125));
+        	} else {
+        		holder.pictureView.setImageBitmap(defaultImage);
+        	}
+        }
+        if (currentColumn.bitmaps.size() > 1) {
+        	if (currentColumn.bitmaps.get(1) != null) {
+        		holder.pictureView.setImageBitmap(ThumbnailUtils.extractThumbnail(currentColumn.bitmaps.get(1), 125, 125));
+        	} else {
+        		holder.friend1PictureView.setImageBitmap(defaultImage);
+        	}
+        }
+        if (currentColumn.bitmaps.size() > 2) {
+        	if (currentColumn.bitmaps.get(2) != null) {
+        		holder.friend2PictureView.setImageBitmap(ThumbnailUtils.extractThumbnail(currentColumn.bitmaps.get(2), 125, 125));
+        	} else {
+        		holder.friend2PictureView.setImageBitmap(defaultImage);
+        	}
+        }
+        if (currentColumn.bitmaps.size() > 3) {
+        	if (currentColumn.bitmaps.get(3) != null) {
+        		holder.friend3PictureView.setImageBitmap(ThumbnailUtils.extractThumbnail(currentColumn.bitmaps.get(3), 125, 125));
+        	} else {
+        		holder.friend3PictureView.setImageBitmap(defaultImage);
+        	}
+        }
+        //TODO make them disappear if they're not in currentColumn, set imageveiw to GONE
 	    return convertView;
 	}
 	
