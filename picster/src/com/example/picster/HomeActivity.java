@@ -26,6 +26,7 @@ public class HomeActivity extends Activity {
 	private static final int SELECT_PHOTO = 100;
 	private static final String POSITION_IN_LIST = "position_in_list";
 	private DisplayPictureAdapter displayAdapter;
+	private int positionLastClicked;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,11 +74,7 @@ public class HomeActivity extends Activity {
         if (resultCode == RESULT_OK) {
         	Log.d(PicsterApplication.TAG, "In activity result");
     	    Uri selectedImage = data.getData();
-    	    int position = data.getIntExtra(POSITION_IN_LIST, -1);
-    	    if (position == -1) {
-    	    	Log.wtf(PicsterApplication.TAG, "SOMETHING WENT REALLY WRONG POSITION IS -1 meaning wasn't fetched");
-    	    }
-    	    PicsterApplication.currentUser.setPic(selectedImage, position);
+    	    PicsterApplication.currentUser.setPic(selectedImage, this.positionLastClicked);
     	    this.displayAdapter.udpateView(PicsterApplication.currentUser.getUriList());
         } else {
         	Log.d(PicsterApplication.TAG, "result Code error'd");
@@ -102,7 +99,7 @@ public class HomeActivity extends Activity {
       Intent intent = new Intent();
       intent.setType("image/*");
       intent.setAction(Intent.ACTION_GET_CONTENT);
-      intent.putExtra(POSITION_IN_LIST, position);
+      this.positionLastClicked = position;
       startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PHOTO);	
     }
 

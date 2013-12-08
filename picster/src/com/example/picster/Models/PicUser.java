@@ -76,7 +76,8 @@ public class PicUser {
 	
 	public void setPic(Uri uri, int position) {
 	    Log.d(PicsterApplication.TAG, "adding day: " + uri.toString());
-		dateToUri.put(CURRENT_DAY, uri);
+
+		dateToUri.put(CURRENT_DAY - position, uri);
 	}
 	
 }
