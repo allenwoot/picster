@@ -10,6 +10,7 @@ import org.joda.time.LocalDate;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
@@ -18,7 +19,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -61,7 +64,7 @@ public class DisplayPictureAdapter extends ArrayAdapter<PictureGridColumn> {
             convertView = mInflater.inflate(R.layout.picture_list_item, null);
             holder = new ViewHolder();
             holder.pictureView = (ImageView) convertView.findViewById(R.id.daily_picture);
-            holder.friend1PictureView = (ImageView) convertView.findViewById(R.id.friend1_daily_picture);
+            holder.friend1PictureView = (ImageView) convertView.findViewById(R.id.friend1_daily_picture); 
             holder.friend2PictureView = (ImageView) convertView.findViewById(R.id.friend2_daily_picture);
             holder.friend3PictureView = (ImageView) convertView.findViewById(R.id.friend3_daily_picture);
             holder.dateTextView = (TextView) convertView.findViewById(R.id.image_date);
@@ -74,6 +77,20 @@ public class DisplayPictureAdapter extends ArrayAdapter<PictureGridColumn> {
     	Bitmap defaultImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.question_mark);
         if (currentColumn.bitmaps.size() > 0) {
         	if (currentColumn.bitmaps.get(0) != null) {
+        		holder.pictureView.setOnClickListener(new OnClickListener() {
+    				@Override
+    				public void onClick(View view) {
+    					Log.d(PicsterApplication.TAG, "DEBUG: Position is " + position);
+                        Bitmap bmp = PicsterApplication.currentUser.getBitMap(position);
+//                        if (bmp == null) {
+//                                return;
+//                        }
+                        Intent intent = new Intent(view.getContext(), FullScreenImageActivity.class);
+                        intent.putExtra("bmp", bmp);
+                        view.getContext().startActivity(intent);
+    				}
+        		});
+
         		holder.pictureView.setImageBitmap(ThumbnailUtils.extractThumbnail(currentColumn.bitmaps.get(0), 125, 125));
         	} else {
         		holder.pictureView.setImageBitmap(defaultImage);
